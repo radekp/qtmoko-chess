@@ -1,0 +1,6 @@
+Simple frontent for gnuchess game engine. Licensed under GPL v2.
+
+The board graphics is downloaded from wikipedia [1] and is licensed under
+GNU Free Documentation License.
+
+[1] http://en.wikipedia.org/wiki/File:AAA_SVG_Chessboard_and_chess_pieces_04.svg
