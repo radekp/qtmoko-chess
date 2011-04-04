@@ -1,8 +1,9 @@
 #include "boardwidget.h"
+#include "mainwindow.h"
 #include <QPainter>
 
-BoardWidget::BoardWidget(QWidget *parent) :
-        QWidget(parent)
+BoardWidget::BoardWidget(QWidget *mainWin) :
+        QWidget(mainWin)
         , data()
         ,svg(QString("chess.svg"), this)
 {
@@ -32,11 +33,17 @@ void BoardWidget::paintEvent(QPaintEvent *)
         for(int j = 0; j < line.length(); j++)
         {
             QChar ch = line.at(j);
-            if(ch == ' ')
+            if(ch == ' ' || ch == '.')
             {
                 continue;
             }
             svg.render(&p, QString(ch), QRectF((j * step) / 2 + figs, i * step + figs, 8 * figs, 8 * figs));
         }
     }
+}
+
+void BoardWidget::mousePressEvent(QMouseEvent *event)
+{
+    //MainWindow *mainWin = static_cast <MainWindow *> (parent());
+    //mainWin->toggleOutput();
 }

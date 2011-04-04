@@ -1,6 +1,7 @@
 #ifndef BOARDWIDGET_H
 #define BOARDWIDGET_H
 
+#include <QDebug>
 #include <QWidget>
 #include <QSvgRenderer>
 
@@ -8,7 +9,7 @@ class BoardWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BoardWidget(QWidget *parent = 0);
+    explicit BoardWidget(QWidget *mainWin);
 
 signals:
 
@@ -30,6 +31,8 @@ private:
 //    R N B Q K B N R
 
     QSvgRenderer svg;
+
+    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // BOARDWIDGET_H
