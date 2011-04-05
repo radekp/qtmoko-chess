@@ -1,13 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <QFont>
 #include <QTimer>
+#include <QRegExp>
 #include <QProcess>
-#include <QMessageBox>
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QMessageBox>
+#include <QMainWindow>
 #include "boardwidget.h"
 
 class MainWindow : public QMainWindow
@@ -19,12 +21,13 @@ public:
     ~MainWindow();
 
 private:
-    BoardWidget board;
     QWidget centralWidget;
     QVBoxLayout layout;
+    BoardWidget board;
     QLineEdit lineEdit;
     QTextEdit textEdit;
     QProcess gnuchess;
+    QStringList boardText;
 
 public slots:
     void hideOutput();
@@ -34,6 +37,9 @@ public slots:
 private slots:
     void gnuchessFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void gnuchessReadyRead();
+    void boardMousePressed(QMouseEvent *);
+    void sendChessCommand(QString cmd);
+    void lineEditReturnPressed();
 };
 
 #endif // MAINWINDOW_H

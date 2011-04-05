@@ -3,17 +3,21 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QMouseEvent>
 #include <QSvgRenderer>
 
 class BoardWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BoardWidget(QWidget *mainWin);
+    explicit BoardWidget(QWidget *parent);
 
 signals:
+    void mousePressed(QMouseEvent *);
+    void figureMoved(QString move);
 
 public slots:
+    void setBoardText(QStringList *boardText);
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -31,8 +35,17 @@ private:
 //    R N B Q K B N R
 
     QSvgRenderer svg;
+    bool mouseDown;
+    bool moveMade;
+    int mouseDownX;
+    int mouseDownY;
+    int mouseUpX;
+    int mouseUpY;
 
-    void mousePressEvent(QMouseEvent *event);
+    void compute(int *boardSize, qreal *step, qreal *figs, int *ixDown, int *iyDown, int *ixUp, int *iyUp);
+    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
 };
 
 #endif // BOARDWIDGET_H
