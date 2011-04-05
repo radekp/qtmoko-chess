@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Chess
+Exec=qtmoko-chess
+Icon=qtmoko-chess/chess
+Type=Application
+Name[]=Chess
+

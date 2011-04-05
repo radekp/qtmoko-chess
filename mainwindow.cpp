@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
+    : QMainWindow(parent, f)
     , centralWidget(this)
     , layout(&centralWidget)
     , board(this)
@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     textEdit.setFont(QFont("Monospace"));
 
-    layout.addWidget(&board, 1);
+    layout.addWidget(&board, 2);
     layout.addWidget(&textEdit, 1);
     layout.addWidget(&lineEdit);
     setCentralWidget(&centralWidget);
@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&board, SIGNAL(figureMoved(QString)), this, SLOT(sendChessCommand(QString)));
     connect(&lineEdit, SIGNAL(returnPressed()), this, SLOT(lineEditReturnPressed()));
     connect(&gnuchess, SIGNAL(readyRead()), this, SLOT(gnuchessReadyRead()));
-    connect(&gnuchess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(gnuchessFinished(int, QProcess::ExitStatus)));
 
     gnuchess.setProcessChannelMode(QProcess::MergedChannels);
     gnuchess.start("gnuchess", QStringList(), QIODevice::ReadWrite);
@@ -30,17 +29,14 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::critical(this, tr("Gnuchess missing"),
                               tr("Gnuchess failed to start") + ": " + gnuchess.errorString());
     }
+
+    hideOutput();
 }
 
 MainWindow::~MainWindow()
 {
     gnuchess.terminate();
     gnuchess.waitForFinished(1000);
-}
-
-void MainWindow::gnuchessFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-
 }
 
 void MainWindow::gnuchessReadyRead()
@@ -72,6 +68,7 @@ void MainWindow::gnuchessReadyRead()
 
 void MainWindow::hideOutput()
 {
+    board.setFocus();
     textEdit.hide();
     lineEdit.hide();
 }
@@ -102,6 +99,7 @@ void MainWindow::boardMousePressed(QMouseEvent *)
 
 void MainWindow::sendChessCommand(QString cmd)
 {
+    showOutput();
     boardText.clear();
     gnuchess.write(cmd.toLatin1());
     gnuchess.write("\n");

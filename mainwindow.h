@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0, Qt::WFlags f = 0);
     ~MainWindow();
 
 private:
@@ -35,7 +35,6 @@ public slots:
     void toggleOutput();
 
 private slots:
-    void gnuchessFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void gnuchessReadyRead();
     void boardMousePressed(QMouseEvent *);
     void sendChessCommand(QString cmd);

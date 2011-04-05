@@ -5,7 +5,7 @@
 BoardWidget::BoardWidget(QWidget *parent) :
         QWidget(parent)
         , data()
-        , svg(QString("chess.svg"), this)
+        , svg(QString(":/chess.svg"), this)
         , mouseDown(false)
         , moveMade(false)
         , mouseDownX(-1)
@@ -58,8 +58,8 @@ void BoardWidget::paintEvent(QPaintEvent *)
 
     if(mouseDown || moveMade)
     {
-        p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(Qt::green));
         p.fillRect(step * ixDown, step * iyDown, (int)(step), (int)(step), QBrush(Qt::red));
+        p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(Qt::green));
     }
 
     QString figstr("RNBQKPrnbqkp");
@@ -81,8 +81,8 @@ void BoardWidget::paintEvent(QPaintEvent *)
 void BoardWidget::mousePressEvent(QMouseEvent *event)
 {
     mouseDown = true;
-    mouseDownX = event->x();
-    mouseDownY = event->y();
+    mouseDownX = mouseUpX = event->x();
+    mouseDownY = mouseUpY = event->y();
     update();
 }
 

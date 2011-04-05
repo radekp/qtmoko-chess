@@ -1,3 +1,13 @@
+#ifdef QTOPIA
+
+#include <qtopiaapplication.h>
+#include "mainwindow.h"
+
+QTOPIA_ADD_APPLICATION(QTOPIA_TARGET,MainWindow)
+QTOPIA_MAIN
+
+#else
+
 #include <QtGui/QApplication>
 #include "mainwindow.h"
 
@@ -9,3 +19,5 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+
+#endif

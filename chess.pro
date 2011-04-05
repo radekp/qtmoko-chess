@@ -16,3 +16,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     boardwidget.h
+
+RESOURCES += \
+    qresources.qrc
