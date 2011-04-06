@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , textEdit(this)
     , gnuchess(this)
 {
-    textEdit.setFont(QFont("Monospace"));
+    textEdit.setFont(QFont("DejaVu Sans Mono"));
     textEdit.setReadOnly(true);
 
     layout.addWidget(&board, 2);
@@ -46,6 +46,8 @@ void MainWindow::gnuchessReadyRead()
     {
         QString line = gnuchess.readLine();
         textEdit.append(line);
+        QScrollBar *sb = textEdit.verticalScrollBar();
+        sb->setValue(sb->maximum());
 
         if(line.indexOf("Illegal move:") == 0)
         {

@@ -7,6 +7,7 @@
 #include <QProcess>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QScrollBar>
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QMainWindow>
