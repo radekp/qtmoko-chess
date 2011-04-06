@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QPixmap>
 #include <QMouseEvent>
 #include <QSvgRenderer>
 
@@ -21,6 +22,8 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
+
 
 private:
     QStringList data;       // board data in the gnuchess format, e.g:
@@ -35,6 +38,8 @@ private:
 //    R N B Q K B N R
 
     QSvgRenderer svg;
+    QPixmap pix;
+    bool repaintPix;
     bool mouseDown;
     bool moveMade;
     int mouseDownX;

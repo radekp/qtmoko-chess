@@ -99,7 +99,6 @@ void MainWindow::boardMousePressed(QMouseEvent *)
 
 void MainWindow::sendChessCommand(QString cmd)
 {
-    showOutput();
     boardText.clear();
     gnuchess.write(cmd.toLatin1());
     gnuchess.write("\n");

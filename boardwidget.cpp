@@ -6,6 +6,8 @@ BoardWidget::BoardWidget(QWidget *parent) :
         QWidget(parent)
         , data()
         , svg(QString(":/chess.svg"), this)
+        , pix()
+        , repaintPix(true)
         , mouseDown(false)
         , moveMade(false)
         , mouseDownX(-1)
@@ -30,6 +32,7 @@ void BoardWidget::setBoardText(QStringList *boardText)
     {
         data.append(boardText->at(i));
     }
+    repaintPix = true;
     update();
 }
 
@@ -54,27 +57,38 @@ void BoardWidget::paintEvent(QPaintEvent *)
     compute(&boardSize, &step, &figs, &ixDown, &iyDown, &ixUp, &iyUp);
 
     QPainter p(this);
-    svg.render(&p, "board", QRectF(0, 0, boardSize, boardSize));
+
+    if(repaintPix)
+    {
+        pix = QPixmap(boardSize, boardSize);
+        QPainter pp(&pix);
+        pp.fillRect(pix.rect(), Qt::white);
+
+        svg.render(&pp, "board", QRectF(0, 0, boardSize, boardSize));
+
+        QString figstr("RNBQKPrnbqkp");
+        for(int i = 0; i < data.length(); i++)
+        {
+            QString line = data.at(i);
+            for(int j = 0; j < line.length(); j++)
+            {
+                QChar ch = line.at(j);
+                if(figstr.indexOf(ch) < 0)
+                {
+                    continue;
+                }
+                svg.render(&pp, QString(ch), QRectF((j * step) / 2 + figs, i * step + figs, 8 * figs, 8 * figs));
+            }
+        }
+        repaintPix = false;
+    }
+
+    p.drawPixmap(0, 0, pix);
 
     if(mouseDown || moveMade)
     {
-        p.fillRect(step * ixDown, step * iyDown, (int)(step), (int)(step), QBrush(Qt::red));
-        p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(Qt::green));
-    }
-
-    QString figstr("RNBQKPrnbqkp");
-    for(int i = 0; i < data.length(); i++)
-    {
-        QString line = data.at(i);
-        for(int j = 0; j < line.length(); j++)
-        {
-            QChar ch = line.at(j);
-            if(figstr.indexOf(ch) < 0)
-            {
-                continue;
-            }
-            svg.render(&p, QString(ch), QRectF((j * step) / 2 + figs, i * step + figs, 8 * figs, 8 * figs));
-        }
+        p.fillRect(step * ixDown, step * iyDown, (int)(step), (int)(step), QBrush(QColor(255, 0, 0, 127)));
+        p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(QColor(0, 255, 0, 127)));
     }
 }
 
@@ -131,4 +145,9 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
     emit figureMoved(QString(chars));
 
     moveMade = false;
+}
+
+void BoardWidget::resizeEvent(QResizeEvent *)
+{
+    repaintPix = true;
 }
