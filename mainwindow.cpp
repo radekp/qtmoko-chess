@@ -102,9 +102,7 @@ void MainWindow::sendChessCommand(QString cmd)
 {
     boardText.clear();
     gnuchess.write(cmd.toLatin1());
-    const char nl[] = { 27, 79, 77 };
-    gnuchess.write(nl, 3);
-    gnuchess.write("\r\n");
+    gnuchess.write("\n");
     lineEdit.setText("");
 }
 

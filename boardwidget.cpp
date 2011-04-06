@@ -139,13 +139,14 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
-    char chars[4];
+    char chars[5];
     chars[0] = chars[2] = 'a';
     chars[1] = chars[3] = '1';
     chars[0] += ixDown;
     chars[1] += 7 - iyDown;
     chars[2] += ixUp;
     chars[3] += 7 - iyUp;
+    chars[4] = 0;
 
     emit figureMoved(QString(chars));
 
