@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , gnuchess(this)
 {
     textEdit.setFont(QFont("Monospace"));
+    textEdit.setReadOnly(true);
 
     layout.addWidget(&board, 2);
     layout.addWidget(&textEdit, 1);
@@ -101,7 +102,9 @@ void MainWindow::sendChessCommand(QString cmd)
 {
     boardText.clear();
     gnuchess.write(cmd.toLatin1());
-    gnuchess.write("\n");
+    const char nl[] = { 27, 79, 77 };
+    gnuchess.write(nl, 3);
+    gnuchess.write("\r\n");
     lineEdit.setText("");
 }
 

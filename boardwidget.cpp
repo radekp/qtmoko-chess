@@ -36,9 +36,11 @@ void BoardWidget::setBoardText(QStringList *boardText)
     update();
 }
 
-void BoardWidget::compute(int *boardSize, qreal *step, qreal *figureStep, int *ixDown, int *iyDown, int *ixUp, int *iyUp)
+void BoardWidget::compute(int *boardSize, int *step, qreal *figureStep, int *ixDown, int *iyDown, int *ixUp, int *iyUp)
 {
     int bs = *boardSize = width() > height() ? height() : width();
+    bs = *boardSize = bs - (bs % 8);
+
     qreal st = *step = bs / 8;
     *figureStep = st / 10;
 
@@ -51,8 +53,8 @@ void BoardWidget::compute(int *boardSize, qreal *step, qreal *figureStep, int *i
 
 void BoardWidget::paintEvent(QPaintEvent *)
 {
-    qreal step, figs;
-    int boardSize, ixDown, iyDown, ixUp, iyUp;
+    qreal figs;
+    int boardSize, step, ixDown, iyDown, ixUp, iyUp;
 
     compute(&boardSize, &step, &figs, &ixDown, &iyDown, &ixUp, &iyUp);
 
@@ -62,16 +64,19 @@ void BoardWidget::paintEvent(QPaintEvent *)
     {
         pix = QPixmap(boardSize, boardSize);
         QPainter pp(&pix);
-        pp.fillRect(pix.rect(), Qt::white);
-
-        svg.render(&pp, "board", QRectF(0, 0, boardSize, boardSize));
 
         QString figstr("RNBQKPrnbqkp");
-        for(int i = 0; i < data.length(); i++)
+        QBrush black = Qt::black;
+        QBrush white = QBrush(QColor(255, 255, 255, 127));
+        for(int i = 0; i < data.length() && i < 8; i++)
         {
             QString line = data.at(i);
-            for(int j = 0; j < line.length(); j++)
+            for(int j = 0; j < line.length() && j < 16; j++)
             {
+                if(j < 8)
+                {
+                    pp.fillRect(j * step, i * step, step, step, ((i + j) % 2) ? Qt::white : Qt::black);
+                }
                 QChar ch = line.at(j);
                 if(figstr.indexOf(ch) < 0)
                 {
@@ -102,8 +107,8 @@ void BoardWidget::mousePressEvent(QMouseEvent *event)
 
 void BoardWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    qreal step, figs;
-    int boardSize, ixDown, iyDown, ixUp, iyUp, ixOld, iyOld;
+    qreal figs;
+    int boardSize, step, ixDown, iyDown, ixUp, iyUp, ixOld, iyOld;
     compute(&boardSize, &step, &figs, &ixDown, &iyDown, &ixOld, &iyOld);
     mouseUpX = event->x();
     mouseUpY = event->y();
@@ -117,8 +122,8 @@ void BoardWidget::mouseMoveEvent(QMouseEvent *event)
 
 void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    qreal step, figs;
-    int boardSize, ixDown, iyDown, ixUp, iyUp;
+    qreal figs;
+    int boardSize, step, ixDown, iyDown, ixUp, iyUp;
 
     mouseUpX = event->x();
     mouseUpY = event->y();

@@ -47,7 +47,7 @@ private:
     int mouseUpX;
     int mouseUpY;
 
-    void compute(int *boardSize, qreal *step, qreal *figs, int *ixDown, int *iyDown, int *ixUp, int *iyUp);
+    void compute(int *boardSize, int *step, qreal *figs, int *ixDown, int *iyDown, int *ixUp, int *iyUp);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
