@@ -14,6 +14,8 @@ BoardWidget::BoardWidget(QWidget *parent) :
         , mouseDownY(-1)
         , mouseUpX(-1)
         , mouseUpY(-1)
+        , lastMoveX(-1)
+        , lastMoveY(-1)
 {
     data << "r n b q k b n r ";
     data << "p p p p p p p p ";
@@ -27,11 +29,24 @@ BoardWidget::BoardWidget(QWidget *parent) :
 
 void BoardWidget::setBoardText(QStringList *boardText)
 {
-    data.clear();
+    lastMoveX = lastMoveY = -1;
     for(int i = 0; i < boardText->length(); i++)
     {
-        data.append(boardText->at(i));
+        // Search for black's last move
+        QString ot = data.at(i);            // old text
+        QString nt = boardText->at(i);      // new text
+        for(int j = 0; j < ot.length() && j < nt.length(); j += 2)
+        {
+            if(ot[j] == nt[j] || nt[j] < 'a' || nt[j] > 'z')
+            {
+                continue;       // same text or white figure
+            }
+            lastMoveX = j / 2;
+            lastMoveY = i;
+        }
+        data[i] = nt;
     }
+
     repaintPix = true;
     update();
 }
@@ -92,8 +107,11 @@ void BoardWidget::paintEvent(QPaintEvent *)
 
     if(mouseDown || moveMade)
     {
-        p.fillRect(step * ixDown, step * iyDown, (int)(step), (int)(step), QBrush(QColor(255, 0, 0, 127)));
         p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(QColor(0, 255, 0, 127)));
+    }
+    if(lastMoveX >= 0)
+    {
+        p.fillRect(step * lastMoveX, step * lastMoveY, (int)(step), (int)(step), QBrush(QColor(0, 255, 0, 127)));
     }
 }
 
@@ -131,6 +149,7 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
     compute(&boardSize, &step, &figs, &ixDown, &iyDown, &ixUp, &iyUp);
     moveMade = (ixDown != ixUp || iyDown != iyUp);
     mouseDown = false;
+    lastMoveX = lastMoveY = -1;
     repaint();
 
     if(ixDown == ixUp && iyDown == iyUp)
@@ -147,7 +166,7 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
     chars[2] += ixUp;
     chars[3] += 7 - iyUp;
     chars[4] = 0;
-
+    
     emit figureMoved(QString(chars));
 
     moveMade = false;

@@ -46,6 +46,8 @@ private:
     int mouseDownY;
     int mouseUpX;
     int mouseUpY;
+    int lastMoveX;          // black's last move
+    int lastMoveY;
 
     void compute(int *boardSize, int *step, qreal *figs, int *ixDown, int *iyDown, int *ixUp, int *iyUp);
     void mouseMoveEvent(QMouseEvent *);
