@@ -54,18 +54,18 @@ void MainWindow::gnuchessReadyRead()
             board.update();
         }
 
-         QRegExp rx("[\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp]");
-         int pos = rx.indexIn(line);
-         if(pos < 0)
-         {
-             continue;
-         }
-         boardText.append(line);
-         if(boardText.length() == 8)
-         {
-             board.setBoardText(&boardText);
-             boardText.clear();
-         }
+        QRegExp rx("[\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp]");
+        int pos = rx.indexIn(line);
+        if(pos < 0)
+        {
+            continue;
+        }
+        boardText.append(line);
+        if(boardText.length() == 8)
+        {
+            board.setBoardText(&boardText);
+            boardText.clear();
+        }
     }
 }
 
