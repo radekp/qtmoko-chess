@@ -69,11 +69,15 @@ void MainWindow::gnuchessReadyRead()
             continue;
         }
         boardText.append(line);
-        if(boardText.length() == 8)
-        {
-            board.setBoardText(&boardText);
-            boardText.clear();
-        }
+    }
+    while(boardText.length() > 8)
+    {
+        boardText.removeAt(0);
+    }
+    if(boardText.length() == 8)
+    {
+        board.setBoardText(&boardText);
+        boardText.clear();
     }
 }
 
