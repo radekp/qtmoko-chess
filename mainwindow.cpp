@@ -43,14 +43,19 @@ MainWindow::~MainWindow()
     gnuchess.waitForFinished(1000);
 }
 
+void MainWindow::scrollTextToEnd()
+{
+    QScrollBar *sb = textEdit.verticalScrollBar();
+    sb->setValue(sb->maximum());
+}
+
 void MainWindow::gnuchessReadyRead()
 {
     while(gnuchess.bytesAvailable() > 0)
     {
         QString line = gnuchess.readLine();
         textEdit.append(line);
-        QScrollBar *sb = textEdit.verticalScrollBar();
-        sb->setValue(sb->maximum());
+        scrollTextToEnd();
 
         if(line.indexOf("Illegal move:") == 0)
         {
@@ -81,9 +86,11 @@ void MainWindow::hideOutput()
 
 void MainWindow::showOutput()
 {
-    textEdit.show();
     lineEdit.show();
     lineEdit.setFocus();
+    textEdit.show();
+    scrollTextToEnd();
+    QTimer::singleShot(3000, this, SLOT(scrollTextToEnd()));       // Qtmoko needs some time because virtual keyboard is shown which resizes text and moves with scrollbar
 }
 
 void MainWindow::toggleOutput()

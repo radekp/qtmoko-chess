@@ -42,6 +42,7 @@ private slots:
     void boardMousePressed(QMouseEvent *);
     void sendChessCommand(QString cmd);
     void lineEditReturnPressed();
+    void scrollTextToEnd();
 };
 
 #endif // MAINWINDOW_H
