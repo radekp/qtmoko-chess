@@ -3,7 +3,8 @@
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     : QMainWindow(parent, f)
     , centralWidget(this)
-    , layout(&centralWidget)
+    , vLayout(&centralWidget)
+    , hLayout()
     , board(this)
     , lineEdit(this)
     , textEdit(this)
@@ -12,9 +13,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     textEdit.setFont(QFont("DejaVu Sans Mono"));
     textEdit.setReadOnly(true);
 
-    layout.addWidget(&board,    0, 0, 1, 1);
-    layout.addWidget(&textEdit, 0, 1, 1, 1);
-    layout.addWidget(&lineEdit, 1, 0, 1, 2);
+    vLayout.addLayout(&hLayout);
+    vLayout.addWidget(&lineEdit);
+    hLayout.addWidget(&board);
+    hLayout.addWidget(&textEdit);
+
     setCentralWidget(&centralWidget);
 
     connect(&board, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(boardMousePressed(QMouseEvent *)));
@@ -74,14 +77,10 @@ void MainWindow::hideOutput()
     board.setFocus();
     textEdit.hide();
     lineEdit.hide();
-    layout.setColumnStretch(0, 1);
-    layout.setColumnStretch(1, 0);
 }
 
 void MainWindow::showOutput()
 {
-    layout.setColumnStretch(0, 2);
-    layout.setColumnStretch(1, 1);
     textEdit.show();
     lineEdit.show();
     lineEdit.setFocus();

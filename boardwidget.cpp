@@ -177,4 +177,6 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
 void BoardWidget::resizeEvent(QResizeEvent *)
 {
     repaintPix = true;
+    QWidget *parent = parentWidget();
+    setMinimumSize(parent->width() / 2, parent->width() / 2);
 }

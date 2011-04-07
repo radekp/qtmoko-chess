@@ -8,7 +8,8 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QScrollBar>
-#include <QGridLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QMessageBox>
 #include <QMainWindow>
 #include "boardwidget.h"
@@ -23,7 +24,8 @@ public:
 
 private:
     QWidget centralWidget;
-    QGridLayout layout;
+    QVBoxLayout vLayout;
+    QHBoxLayout hLayout;
     BoardWidget board;
     QLineEdit lineEdit;
     QTextEdit textEdit;
