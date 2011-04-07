@@ -105,14 +105,15 @@ void BoardWidget::paintEvent(QPaintEvent *)
 
     p.drawPixmap(0, 0, pix);
 
-    p.setPen(Qt::black);
+    qreal outline = figs / 2;
+    p.setPen(QPen(Qt::black, outline));
     if(mouseDown || moveMade)
     {
-        p.drawRoundedRect(step * ixUp, step * iyUp, (int)(step), (int)(step), 5, 5);
+        p.drawRoundedRect(step * ixUp, step * iyUp, (int)(step), (int)(step), outline, outline);
     }
     if(lastMoveX >= 0)
     {
-        p.drawRoundedRect(step * lastMoveX, step * lastMoveY, (int)(step), (int)(step), 5, 5);
+        p.drawRoundedRect(step * lastMoveX, step * lastMoveY, (int)(step), (int)(step), outline, outline);
     }
 }
 
