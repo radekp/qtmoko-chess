@@ -90,7 +90,7 @@ void BoardWidget::paintEvent(QPaintEvent *)
             {
                 if(j < 8)
                 {
-                    pp.fillRect(j * step, i * step, step, step, ((i + j) % 2) ? Qt::white : Qt::black);
+                    pp.fillRect(j * step, i * step, step, step, ((i + j) % 2) ? Qt::white : QBrush(QColor(196, 196, 196, 255)));
                 }
                 QChar ch = line.at(j);
                 if(figstr.indexOf(ch) < 0)
@@ -105,13 +105,14 @@ void BoardWidget::paintEvent(QPaintEvent *)
 
     p.drawPixmap(0, 0, pix);
 
+    p.setPen(Qt::black);
     if(mouseDown || moveMade)
     {
-        p.fillRect(step * ixUp, step * iyUp, (int)(step), (int)(step), QBrush(QColor(0, 255, 0, 127)));
+        p.drawRoundedRect(step * ixUp, step * iyUp, (int)(step), (int)(step), 5, 5);
     }
     if(lastMoveX >= 0)
     {
-        p.fillRect(step * lastMoveX, step * lastMoveY, (int)(step), (int)(step), QBrush(QColor(0, 255, 0, 127)));
+        p.drawRoundedRect(step * lastMoveX, step * lastMoveY, (int)(step), (int)(step), 5, 5);
     }
 }
 
