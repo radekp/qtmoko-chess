@@ -62,6 +62,11 @@ void MainWindow::gnuchessReadyRead()
             board.update();
         }
 
+        if(line.indexOf("wins") >= 0)
+        {
+            showOutput();
+        }
+
         QRegExp rx("[\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp] [\\.RNBQKPrnbqkp]");
         int pos = rx.indexIn(line);
         if(pos < 0)
