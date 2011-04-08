@@ -53,15 +53,20 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     connect(&bDone, SIGNAL(clicked()), this, SLOT(hideUndo()));
 
     gnuchess.setProcessChannelMode(QProcess::MergedChannels);
-    gnuchess.start("gnuchess", QStringList(), QIODevice::ReadWrite);
 
-    if(!gnuchess.waitForStarted(10000))
+    for(;;)
     {
-        if(QMessageBox::question(this, "Install gnuchess?", tr("Package 'gnuchess' is missing. Install it?"),
-                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+        gnuchess.start("gnuchess", QStringList(), QIODevice::ReadWrite);
+        if(gnuchess.waitForStarted(10000))
         {
-            QProcess::execute("raptor", QStringList() << "-u" << "-i" << "gnuchess");
+            break;
         }
+        if(QMessageBox::question(this, "Install gnuchess?", tr("Package 'gnuchess' is missing. Install it?"),
+                                 QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+        {
+            break;
+        }
+        QProcess::execute("raptor", QStringList() << "-u" << "-i" << "gnuchess");
     }
 
     hideOutput();
