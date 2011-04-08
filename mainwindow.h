@@ -65,7 +65,6 @@ public slots:
 
 private slots:
     void gnuchessReadyRead();
-    void boardMousePressed(QMouseEvent *);
     void sendChessCommand(QString cmd);
     void lineEditReturnPressed();
     void scrollTextToEnd();

@@ -14,7 +14,6 @@ public:
     explicit BoardWidget(QWidget *parent);
 
 signals:
-    void mousePressed(QMouseEvent *);
     void figureMoved(QString move);
 
 public slots:

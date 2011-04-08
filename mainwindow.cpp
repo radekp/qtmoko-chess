@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
 
     setCentralWidget(&centralWidget);
 
-    connect(&board, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(boardMousePressed(QMouseEvent *)));
     connect(&board, SIGNAL(figureMoved(QString)), this, SLOT(sendChessCommand(QString)));
     connect(&lineEdit, SIGNAL(returnPressed()), this, SLOT(lineEditReturnPressed()));
     connect(&gnuchess, SIGNAL(readyRead()), this, SLOT(gnuchessReadyRead()));
@@ -180,11 +179,6 @@ void MainWindow::hideUndo()
     bUndo.setVisible(false);
     bRedo.setVisible(false);
     bDone.setVisible(false);
-}
-
-void MainWindow::boardMousePressed(QMouseEvent *)
-{
-    toggleOutput();
 }
 
 void MainWindow::sendChessCommand(QString cmd)

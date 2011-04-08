@@ -164,7 +164,6 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
 
     if(ixDown == ixUp && iyDown == iyUp)
     {
-        emit mousePressed(event);
         return;
     }
 
