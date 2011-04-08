@@ -10,6 +10,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , textEdit(this)
     , gnuchess(this)
 {
+#ifdef QTOPIA
+    QMenu *menu = QSoftMenuBar::menuFor(this);
+#else
+    QMenu *menu = this->menuBar()->addMenu("&Chess");
+    resize(640, 480);
+#endif
+
+    menu->addAction(tr("Toggle output"), this, SLOT(toggleOutput()));
+    autoSave = menu->addAction(tr("Auto save"), this, NULL);
+    autoSave->setCheckable(true);
+    autoSave->setChecked(true);
+
     textEdit.setFont(QFont("DejaVu Sans Mono"));
     textEdit.setReadOnly(true);
 
@@ -35,6 +47,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     }
 
     hideOutput();
+
+    saveDir = QDir::homePath() + "/.qtmoko-chess";
+    if(!QDir(saveDir).exists() && !QDir::home().mkdir(".qtmoko-chess"))
+    {
+        QMessageBox::critical(this, tr("Save game"),
+                              tr("Failed to create dir for saving games") + " " + saveDir);
+    }
+    mkSavedGamesList();
+    load(0);
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +104,10 @@ void MainWindow::gnuchessReadyRead()
     {
         board.setBoardText(&boardText);
         boardText.clear();
+        if(autoSave->isChecked())
+        {
+            save();
+        }
     }
 }
 
@@ -130,4 +155,36 @@ void MainWindow::sendChessCommand(QString cmd)
 void MainWindow::lineEditReturnPressed()
 {
     sendChessCommand(lineEdit.text());
+}
+
+void MainWindow::mkSavedGamesList()
+{
+    QDir dir(saveDir);
+    savedGames = dir.entryList(QStringList() << "*", QDir::Files, QDir::Name | QDir::Reversed);
+}
+
+void MainWindow::save()
+{
+    int no = 0;
+    if(savedGames.length() > 0)
+    {
+        QString last = savedGames.at(0);
+        no = last.toInt() + 1;
+    }
+    QString fileName = QString("%1").arg(no, 4, 10, QChar('0'));
+    savedGames.insert(0, fileName);
+    sendChessCommand("save " + saveDir + "/" + fileName);
+}
+
+void MainWindow::load(int index)
+{
+    if(savedGames.length() == 0)
+    {
+        return;
+    }
+    if(index >= savedGames.length())
+    {
+        index = savedGames.length() - 1;
+    }
+    sendChessCommand("load " + saveDir + "/" + savedGames.at(index));
 }

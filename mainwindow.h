@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDir>
 #include <QFont>
+#include <QMenu>
 #include <QTimer>
 #include <QRegExp>
 #include <QProcess>
@@ -12,6 +14,12 @@
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QMainWindow>
+#ifdef QTOPIA
+#include <QSoftMenuBar>
+#else
+#include <QMenuBar>
+#endif
+
 #include "boardwidget.h"
 
 class MainWindow : public QMainWindow
@@ -31,11 +39,17 @@ private:
     QTextEdit textEdit;
     QProcess gnuchess;
     QStringList boardText;
+    QAction *autoSave;
+    QString saveDir;
+    QStringList savedGames;
 
 public slots:
     void hideOutput();
     void showOutput();
     void toggleOutput();
+    void save();
+    void load(int index);
+    void mkSavedGamesList();
 
 private slots:
     void gnuchessReadyRead();
