@@ -14,6 +14,7 @@
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QMainWindow>
+#include <QPushButton>
 #ifdef QTOPIA
 #include <QSoftMenuBar>
 #else
@@ -37,6 +38,9 @@ private:
     BoardWidget board;
     QLineEdit lineEdit;
     QTextEdit textEdit;
+    QPushButton bUndo;
+    QPushButton bRedo;
+    QPushButton bDone;
     QProcess gnuchess;
     bool skipSave;
     int undoIndex;
@@ -49,12 +53,15 @@ public slots:
     void hideOutput();
     void showOutput();
     void toggleOutput();
+    void hideUndo();
+    void showUndo();
     void newGame();
     void save();
     int  load(int index);
     void undo();
     void redo();
     void mkSavedGamesList();
+    void delSavedGames();
 
 private slots:
     void gnuchessReadyRead();

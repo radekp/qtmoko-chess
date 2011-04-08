@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , board(this)
     , lineEdit(this)
     , textEdit(this)
+    , bUndo(tr("Undo"), this)
+    , bRedo(tr("Redo"), this)
+    , bDone(tr("Done"), this)
     , gnuchess(this)
     , skipSave(false)
     , undoIndex(0)
@@ -21,8 +24,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
 
     menu->addAction(tr("New game"), this, SLOT(newGame()));
     menu->addAction(tr("Toggle output"), this, SLOT(toggleOutput()));
+    menu->addAction(tr("Undo/Redo buttons"), this, SLOT(showUndo()));
+    menu->addAction(tr("Remove saved games"), this, SLOT(delSavedGames()));
     autoSave = menu->addAction(tr("Auto save"), this, NULL);
-    menu->addAction(tr("Redo"), this, SLOT(redo()));
     menu->addAction(tr("Undo"), this, SLOT(undo()));
     autoSave->setCheckable(true);
     autoSave->setChecked(true);
@@ -32,6 +36,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
 
     vLayout.addLayout(&hLayout);
     vLayout.addWidget(&lineEdit);
+    vLayout.addWidget(&bUndo);
+    vLayout.addWidget(&bRedo);
+    vLayout.addWidget(&bDone);
+
     hLayout.addWidget(&board);
     hLayout.addWidget(&textEdit);
 
@@ -41,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     connect(&board, SIGNAL(figureMoved(QString)), this, SLOT(sendChessCommand(QString)));
     connect(&lineEdit, SIGNAL(returnPressed()), this, SLOT(lineEditReturnPressed()));
     connect(&gnuchess, SIGNAL(readyRead()), this, SLOT(gnuchessReadyRead()));
+    connect(&bUndo, SIGNAL(clicked()), this, SLOT(undo()));
+    connect(&bRedo, SIGNAL(clicked()), this, SLOT(redo()));
+    connect(&bDone, SIGNAL(clicked()), this, SLOT(hideUndo()));
 
     gnuchess.setProcessChannelMode(QProcess::MergedChannels);
     gnuchess.start("gnuchess", QStringList(), QIODevice::ReadWrite);
@@ -52,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     }
 
     hideOutput();
+    hideUndo();
 
     saveDir = QDir::homePath() + "/.qtmoko-chess";
     if(!QDir(saveDir).exists() && !QDir::home().mkdir(".qtmoko-chess"))
@@ -132,6 +144,7 @@ void MainWindow::hideOutput()
 
 void MainWindow::showOutput()
 {
+    hideUndo();
     lineEdit.show();
     lineEdit.setFocus();
     textEdit.show();
@@ -149,6 +162,21 @@ void MainWindow::toggleOutput()
     {
         showOutput();
     }
+}
+
+void MainWindow::showUndo()
+{
+    hideOutput();
+    bUndo.setVisible(true);
+    bRedo.setVisible(true);
+    bDone.setVisible(true);
+}
+
+void MainWindow::hideUndo()
+{
+    bUndo.setVisible(false);
+    bRedo.setVisible(false);
+    bDone.setVisible(false);
 }
 
 void MainWindow::boardMousePressed(QMouseEvent *)
@@ -179,6 +207,15 @@ void MainWindow::mkSavedGamesList()
 {
     QDir dir(saveDir);
     savedGames = dir.entryList(QStringList() << "*", QDir::Files, QDir::Name | QDir::Reversed);
+}
+
+void MainWindow::delSavedGames()
+{
+    QDir dir(saveDir);
+    while(savedGames.length() > 0)
+    {
+        dir.remove(savedGames.takeAt(0));
+    }
 }
 
 void MainWindow::save()
