@@ -47,6 +47,7 @@ public slots:
     void hideOutput();
     void showOutput();
     void toggleOutput();
+    void newGame();
     void save();
     void load(int index);
     void mkSavedGamesList();

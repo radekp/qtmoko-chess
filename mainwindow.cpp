@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     resize(640, 480);
 #endif
 
+    menu->addAction(tr("New game"), this, SLOT(newGame()));
     menu->addAction(tr("Toggle output"), this, SLOT(toggleOutput()));
     autoSave = menu->addAction(tr("Auto save"), this, NULL);
     autoSave->setCheckable(true);
@@ -155,6 +156,12 @@ void MainWindow::sendChessCommand(QString cmd)
 void MainWindow::lineEditReturnPressed()
 {
     sendChessCommand(lineEdit.text());
+}
+
+void MainWindow::newGame()
+{
+    sendChessCommand("new");
+    board.newGame();
 }
 
 void MainWindow::mkSavedGamesList()

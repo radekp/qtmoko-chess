@@ -18,6 +18,7 @@ signals:
     void figureMoved(QString move);
 
 public slots:
+    void newGame();
     void setBoardText(QStringList *boardText);
 
 protected:

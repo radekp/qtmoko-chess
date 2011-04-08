@@ -17,6 +17,12 @@ BoardWidget::BoardWidget(QWidget *parent) :
         , lastMoveX(-1)
         , lastMoveY(-1)
 {
+    newGame();
+}
+
+void BoardWidget::newGame()
+{
+    data.clear();
     data << "r n b q k b n r ";
     data << "p p p p p p p p ";
     data << ". . . . . . . . ";
@@ -25,6 +31,8 @@ BoardWidget::BoardWidget(QWidget *parent) :
     data << ". . . . . . . . ";
     data << "P P P P P P P P ";
     data << "R N B Q K B N R ";
+    repaintPix = true;
+    update();
 }
 
 void BoardWidget::setBoardText(QStringList *boardText)
