@@ -58,8 +58,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
 
     if(!gnuchess.waitForStarted(10000))
     {
-        QMessageBox::critical(this, tr("Gnuchess missing"),
-                              tr("Gnuchess failed to start") + ": " + gnuchess.errorString());
+        if(QMessageBox::question(this, "Install gnuchess?", tr("Package 'gnuchess' is missing. Install it?"),
+                              QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+        {
+            QProcess::execute("raptor", QStringList() << "-u" << "-i" << "gnuchess");
+        }
     }
 
     hideOutput();

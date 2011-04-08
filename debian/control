@@ -10,5 +10,5 @@ Vcs-Browser: https://github.com/radekp/qtmoko
 
 Package: qtmoko-chess
 Architecture: any
-Depends: gnuchess
+Depends:
 Description: Simple gnuchess frontent for QtMoko or plain Qt
