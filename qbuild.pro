@@ -42,6 +42,6 @@ desktop [
 
 pics [
     hint=pics
-    files=chess.svg
+    files=qtmoko-chess.svg
     path=/pics/qtmoko-chess
 ]
