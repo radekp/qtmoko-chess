@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , lineEdit(this)
     , textEdit(this)
     , gnuchess(this)
+    , skipSave(false)
 {
 #ifdef QTOPIA
     QMenu *menu = QSoftMenuBar::menuFor(this);
@@ -20,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     menu->addAction(tr("New game"), this, SLOT(newGame()));
     menu->addAction(tr("Toggle output"), this, SLOT(toggleOutput()));
     autoSave = menu->addAction(tr("Auto save"), this, NULL);
+    menu->addAction(tr("Redo"), this, SLOT(redo()));
+    menu->addAction(tr("Undo"), this, SLOT(undo()));
     autoSave->setCheckable(true);
     autoSave->setChecked(true);
 
@@ -107,7 +110,14 @@ void MainWindow::gnuchessReadyRead()
         boardText.clear();
         if(autoSave->isChecked())
         {
-            save();
+            if(skipSave)
+            {
+                skipSave = false;
+            }
+            else
+            {
+                save();
+            }
         }
     }
 }
@@ -193,5 +203,17 @@ void MainWindow::load(int index)
     {
         index = savedGames.length() - 1;
     }
+    skipSave = true;
     sendChessCommand("load " + saveDir + "/" + savedGames.at(index));
+}
+
+void MainWindow::undo()
+{
+    skipSave = true;
+    sendChessCommand("undo");
+}
+
+void MainWindow::redo()
+{
+    load(0);
 }

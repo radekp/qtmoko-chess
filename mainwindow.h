@@ -38,6 +38,7 @@ private:
     QLineEdit lineEdit;
     QTextEdit textEdit;
     QProcess gnuchess;
+    bool skipSave;
     QStringList boardText;
     QAction *autoSave;
     QString saveDir;
@@ -50,6 +51,8 @@ public slots:
     void newGame();
     void save();
     void load(int index);
+    void undo();
+    void redo();
     void mkSavedGamesList();
 
 private slots:
