@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     , textEdit(this)
     , gnuchess(this)
     , skipSave(false)
+    , undoIndex(0)
 {
 #ifdef QTOPIA
     QMenu *menu = QSoftMenuBar::menuFor(this);
@@ -193,27 +194,33 @@ void MainWindow::save()
     sendChessCommand("save " + saveDir + "/" + fileName);
 }
 
-void MainWindow::load(int index)
+int MainWindow::load(int index)
 {
     if(savedGames.length() == 0)
     {
-        return;
+        return 0;
     }
     if(index >= savedGames.length())
     {
         index = savedGames.length() - 1;
+        newGame();
+        return index;
+    }
+    if(index < 0)
+    {
+        index = 0;
     }
     skipSave = true;
     sendChessCommand("load " + saveDir + "/" + savedGames.at(index));
+    return index;
 }
 
 void MainWindow::undo()
 {
-    skipSave = true;
-    sendChessCommand("undo");
+    undoIndex = load(undoIndex + 1);
 }
 
 void MainWindow::redo()
 {
-    load(0);
+    undoIndex = load(undoIndex - 1);
 }
