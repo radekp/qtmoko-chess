@@ -68,6 +68,7 @@ private slots:
     void sendChessCommand(QString cmd);
     void lineEditReturnPressed();
     void scrollTextToEnd();
+    void doneClicked();
 };
 
 #endif // MAINWINDOW_H

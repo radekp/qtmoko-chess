@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     menu->addAction(tr("Undo/Redo buttons"), this, SLOT(showUndo()));
     menu->addAction(tr("Remove saved games"), this, SLOT(delSavedGames()));
     autoSave = menu->addAction(tr("Auto save"), this, NULL);
-    menu->addAction(tr("Undo"), this, SLOT(undo()));
     autoSave->setCheckable(true);
     autoSave->setChecked(true);
 
@@ -50,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
     connect(&gnuchess, SIGNAL(readyRead()), this, SLOT(gnuchessReadyRead()));
     connect(&bUndo, SIGNAL(clicked()), this, SLOT(undo()));
     connect(&bRedo, SIGNAL(clicked()), this, SLOT(redo()));
-    connect(&bDone, SIGNAL(clicked()), this, SLOT(hideUndo()));
+    connect(&bDone, SIGNAL(clicked()), this, SLOT(doneClicked()));
 
     gnuchess.setProcessChannelMode(QProcess::MergedChannels);
 
@@ -262,4 +261,11 @@ void MainWindow::undo()
 void MainWindow::redo()
 {
     undoIndex = load(undoIndex - 1);
+}
+
+void MainWindow::doneClicked()
+{
+    undoIndex = 0;
+    save();
+    hideUndo();
 }
