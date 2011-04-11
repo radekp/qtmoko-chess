@@ -53,6 +53,7 @@ private:
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
+    QString promote(int ixUp, int iyUp);
 };
 
 #endif // BOARDWIDGET_H

@@ -148,6 +148,49 @@ void BoardWidget::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
+QString BoardWidget::promote(int ixUp, int iyUp)
+{
+    if(iyUp != 0 || data.length() < 2)
+    {
+        return QString();
+    }
+    QString rowText = data.at(1);
+    QChar ch = rowText.at(ixUp * 2);
+    if(ch != 'P')
+    {
+        return QString();
+    }
+
+    sel:
+    int val = QMessageBox::question(this, tr("Promote"),
+                                    tr("Select figure"),
+                                    tr("queen"),
+                                    tr("rook"),
+                                    tr("other.."), 0, 2);
+
+    if(val == 2)
+    {
+        val += QMessageBox::question(this, tr("Promote"),
+                                     tr("Select figure"),
+                                     tr("knight"),
+                                     tr("bishop"),
+                                     tr("other.."), 0, 2);
+    }
+    switch(val)
+    {
+    case 0:
+        return QString('q');
+    case 1:
+        return QString('r');
+    case 2:
+        return QString('n');
+    case 3:
+        return QString('b');
+    default:
+        goto sel;
+    }
+}
+
 void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     qreal figs;
@@ -167,7 +210,9 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
-    char chars[5];
+    QString p = promote(ixUp, iyUp);
+
+    char chars[6];
     chars[0] = chars[2] = 'a';
     chars[1] = chars[3] = '1';
     chars[0] += ixDown;
@@ -175,7 +220,13 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
     chars[2] += ixUp;
     chars[3] += 7 - iyUp;
     chars[4] = 0;
-    
+    chars[5] = 0;
+
+    if(p.length() > 0)
+    {
+        chars[4] = p.at(0).toAscii();
+    }
+
     emit figureMoved(QString(chars));
 
     moveMade = false;
