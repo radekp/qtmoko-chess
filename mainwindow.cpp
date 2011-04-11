@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags f)
 
     menu->addAction(tr("New game"), this, SLOT(newGame()));
     menu->addAction(tr("Toggle output"), this, SLOT(toggleOutput()));
-    menu->addAction(tr("Undo/Redo buttons"), this, SLOT(showUndo()));
+    menu->addAction(tr("Undo/Redo"), this, SLOT(showUndo()));
     menu->addAction(tr("Remove saved games"), this, SLOT(delSavedGames()));
     autoSave = menu->addAction(tr("Auto save"), this, NULL);
     autoSave->setCheckable(true);
@@ -106,7 +106,9 @@ void MainWindow::gnuchessReadyRead()
             board.update();
         }
 
-        if(line.indexOf("wins") >= 0)
+        if(line.indexOf("wins") >= 0 ||
+           line.indexOf("looses") >= 0 ||
+           line.indexOf("draw") >= 0)
         {
             showOutput();
         }
