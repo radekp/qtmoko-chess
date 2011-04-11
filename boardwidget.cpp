@@ -111,7 +111,7 @@ void BoardWidget::paintEvent(QPaintEvent *)
         repaintPix = false;
     }
 
-    p.drawPixmap(0, 0, pix);
+    p.drawPixmap(0, 0, boardSize, boardSize, pix, 0, 0, pix.width(), pix.height());
 
     qreal outline = figs / 2;
     p.setPen(QPen(Qt::black, outline));
@@ -183,7 +183,11 @@ void BoardWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void BoardWidget::resizeEvent(QResizeEvent *)
 {
-    repaintPix = true;
+    qreal figs;
+    int boardSize, step, ixDown, iyDown, ixUp, iyUp;
+    compute(&boardSize, &step, &figs, &ixDown, &iyDown, &ixUp, &iyUp);
+    repaintPix = pix.width() < boardSize;
+
     QWidget *parent = parentWidget();
     setMinimumSize(parent->width() / 2, parent->width() / 2);
 }
